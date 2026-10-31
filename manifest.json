@@ -1,0 +1,10 @@
+{
+  "name": "Turno Fácil",
+  "short_name": "Turno Fácil",
+  "description": "Controla tus jornadas, horas y propinas.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f6fb",
+  "theme_color": "#10213b",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

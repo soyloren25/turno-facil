@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10213b">
+  <meta name="description" content="Turno Fácil: controla tus jornadas, horas y propinas.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>Turno Fácil</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">TF</span><div><strong>Turno Fácil</strong><small>Tu trabajo, bajo control</small></div></div>
+    <button id="settingsBtn" class="icon-btn" aria-label="Configuración">⚙</button>
+  </header>
+  <main>
+    <section class="welcome">
+      <p class="eyebrow" id="todayLabel">TU RESUMEN</p>
+      <h1>Hola, <span id="userName">compañero</span> 👋</h1>
+      <p class="muted">Aquí tienes el resumen de tu trabajo.</p>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card"><span>Horas este mes</span><strong id="monthHours">0 h</strong><small>Jornadas registradas</small></article>
+      <article class="stat-card"><span>Sueldo estimado</span><strong id="monthPay">0,00 €</strong><small>Según tu tarifa por hora</small></article>
+      <article class="stat-card"><span>Propinas</span><strong id="monthTips">0,00 €</strong><small>Este mes</small></article>
+    </section>
+
+    <section class="panel shift-panel">
+      <div class="section-heading"><div><p class="eyebrow">CONTROL HORARIO</p><h2>Tu jornada</h2></div><span class="live-dot" id="statusDot"></span></div>
+      <div class="timer" id="timer">00:00:00</div>
+      <p class="muted center" id="shiftStatus">Todavía no has iniciado tu jornada.</p>
+      <div class="actions">
+        <button id="startBtn" class="primary">▶ Registrar entrada</button>
+        <button id="stopBtn" class="secondary" disabled>■ Registrar salida</button>
+      </div>
+      <p class="hint">Recuerda registrar tu descanso y comprobar tus horas antes de cerrar el día.</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">AÑADIR REGISTRO</p><h2>Propinas de hoy</h2></div><span class="emoji">💶</span></div>
+      <form id="tipsForm" class="inline-form">
+        <label class="sr-only" for="tipsInput">Importe de propinas en euros</label>
+        <input id="tipsInput" type="number" min="0" step="0.01" placeholder="Importe en €" required>
+        <button class="primary" type="submit">Guardar</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">TU ACTIVIDAD</p><h2>Últimas jornadas</h2></div></div>
+      <div id="history" class="history"><p class="empty">Todavía no hay jornadas guardadas.</p></div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">CONFIGURA TU PERFIL</p><h2>Tus datos</h2></div></div>
+      <form id="profileForm" class="profile-form">
+        <label>Tu nombre<input id="nameInput" maxlength="30" placeholder="Ej. Alex"></label>
+        <label>Pago bruto estimado por hora (€)<input id="rateInput" type="number" min="0" step="0.01" placeholder="Ej. 10"></label>
+        <button class="secondary" type="submit">Guardar mis datos</button>
+      </form>
+      <p class="hint">El sueldo es una estimación orientativa, no sustituye a tu nómina ni calcula impuestos, complementos o convenios.</p>
+    </section>
+  </main>
+  <footer>Turno Fácil · Primera versión · Tus datos se guardan en este dispositivo.</footer>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="dialog-content">
+      <h2>Configuración</h2>
+      <p>Esta primera versión guarda tus datos localmente en este navegador. Si borras los datos del navegador, podrías perderlos.</p>
+      <button class="primary" value="close">Entendido</button>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
