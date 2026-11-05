@@ -392,3 +392,131 @@ $("googleConnect").addEventListener("click", () => {
 
   tokenClient.requestAccessToken();
 });
+// ===== GUARDAR Y RESTAURAR DESDE GOOGLE DRIVE =====
+
+async function findDriveBackupFile() {
+  const query = encodeURIComponent(
+    "name='" + DRIVE_FILENAME + "' and trashed=false"
+  );
+
+  const response = await fetch(
+    "https://www.googleapis.com/drive/v3/files?q=" +
+    query + "&spaces=drive&fields=files(id,name)",
+    {
+      headers: {
+        Authorization: "Bearer " + driveToken
+      }
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("No se pudo buscar la copia en Drive.");
+  }
+
+  const data = await response.json();
+
+  return data.files && data.files.length
+    ? data.files[0].id
+    : null;
+}
+
+// Al conectar, buscar la copia existente antes de guardar
+async function startDriveSync() {
+  if (driveSyncTimer) clearInterval(driveSyncTimer);
+
+  try {
+    driveFileId = await findDriveBackupFile();
+    driveLastSnapshot = "";
+
+    await uploadDriveBackup();
+
+    driveSyncTimer = setInterval(() => {
+      uploadDriveBackup();
+    }, 5000);
+  } catch (error) {
+    $("googleStatus").textContent =
+      "No se pudo iniciar la sincronización con Drive.";
+  }
+}
+
+// Guardar una copia manualmente
+$("googleSaveNow").addEventListener("click", async () => {
+  if (!driveToken) {
+    alert("Primero conecta Google Drive.");
+    return;
+  }
+
+  driveLastSnapshot = "";
+
+  $("googleStatus").textContent = "Guardando copia...";
+
+  await uploadDriveBackup();
+});
+
+// Restaurar la copia guardada en Drive
+$("googleRestore").addEventListener("click", async () => {
+  if (!driveToken) {
+    alert("Primero conecta Google Drive.");
+    return;
+  }
+
+  if (!confirm(
+    "La copia de Google Drive sustituirá los datos actuales de este navegador. ¿Continuar?"
+  )) return;
+
+  try {
+    $("googleStatus").textContent = "Buscando copia en Drive...";
+
+    const fileId = await findDriveBackupFile();
+
+    if (!fileId) {
+      alert("Todavía no existe ninguna copia en Google Drive.");
+      return;
+    }
+
+    const response = await fetch(
+      "https://www.googleapis.com/drive/v3/files/" +
+      fileId + "?alt=media",
+      {
+        headers: {
+          Authorization: "Bearer " + driveToken
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("No se pudo descargar la copia.");
+    }
+
+    const backup = await response.json();
+
+    const validBackup =
+      backup.app === "Turno Fácil" &&
+      backup.version === 1 &&
+      backup.state &&
+      Array.isArray(backup.state.shifts) &&
+      Array.isArray(backup.state.tips) &&
+      Array.isArray(backup.calendar);
+
+    if (!validBackup) {
+      throw new Error("La copia de Drive no es válida.");
+    }
+
+    localStorage.setItem(
+      KEY,
+      JSON.stringify({ ...emptyState, ...backup.state })
+    );
+
+    localStorage.setItem(
+      calendarKey,
+      JSON.stringify(backup.calendar)
+    );
+
+    alert("¡Copia de Google Drive restaurada correctamente!");
+
+    location.reload();
+
+  } catch (error) {
+    alert(error.message || "Error al restaurar la copia.");
+  }
+});
