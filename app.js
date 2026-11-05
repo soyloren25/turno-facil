@@ -32,6 +32,31 @@ $("stopBtn").addEventListener("click",()=>{if(!state.active)return;const end=Dat
 $("tipsForm").addEventListener("submit",e=>{e.preventDefault();const amount=Number($("tipsInput").value);if(!Number.isFinite(amount)||amount<0)return;state.tips.push({date:dateKey(new Date()),amount});$("tipsInput").value="";save()});
 $("profileForm").addEventListener("submit",e=>{e.preventDefault();state.name=$("nameInput").value.trim()||"compañero";state.rate=Math.max(0,Number($("rateInput").value)||0);save();alert("Tus datos se han guardado.")});
 $("settingsBtn").addEventListener("click",()=>$("settingsDialog").showModal());
+// MODO OSCURO
+const themeToggle = $("themeToggle");
+
+if (localStorage.getItem("turnoFacil_theme") === "dark") {
+  document.body.classList.add("dark-mode");
+}
+
+function updateThemeButton() {
+  themeToggle.textContent = document.body.classList.contains("dark-mode")
+    ? "☀️ Activar modo claro"
+    : "🌙 Activar modo oscuro";
+}
+
+updateThemeButton();
+
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+
+  const dark = document.body.classList.contains("dark-mode");
+
+  localStorage.setItem("turnoFacil_theme", dark ? "dark" : "light");
+
+  updateThemeButton();
+  $("settingsDialog").close();
+});
 setInterval(()=>{if(state.active)$("timer").textContent=duration(Date.now()-state.active.start)},1000);
 if("serviceWorker" in navigator && location.protocol!=="file:"){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
 $("todayLabel").textContent=new Date().toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}).toUpperCase();
