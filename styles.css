@@ -155,3 +155,34 @@ body.professional-theme button.primary {
 body.professional-theme .feature-panel {
   border-top: 3px solid #00c9d8;
 }
+/* CAMBIO VISUAL PROFESIONAL */
+body.professional-theme {
+  background: #e4edf8 !important;
+  color: #142b49 !important;
+}
+
+body.professional-theme main {
+  background: transparent;
+}
+
+body.professional-theme .topbar {
+  background: linear-gradient(120deg, #061a38, #0878d1) !important;
+}
+
+body.professional-theme .panel,
+body.professional-theme .stat-card {
+  background: #ffffff !important;
+  border: 1px solid #c6d9ee !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 24px rgba(7, 27, 58, .12) !important;
+}
+
+body.professional-theme .timer {
+  color: #0878d1 !important;
+}
+
+body.professional-theme .primary {
+  background: linear-gradient(120deg, #0878d1, #00a9c7) !important;
+  color: white !important;
+  border-radius: 14px !important;
+}
