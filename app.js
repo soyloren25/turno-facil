@@ -181,8 +181,10 @@ document.getElementById("backupExport").addEventListener("click", () => {
     app: "Turno Fácil",
     version: 1,
     createdAt: new Date().toISOString(),
-    state: JSON.parse(localStorage.getItem(KEY) || "{}"),
-    calendar: JSON.parse(localStorage.getItem(calendarKey) || "[]")
+    state: { ...emptyState, ...JSON.parse(localStorage.getItem(KEY) || "{}") },
+    calendar: Array.isArray(JSON.parse(localStorage.getItem(calendarKey) || "[]"))
+  ? JSON.parse(localStorage.getItem(calendarKey) || "[]")
+  : []
   };
 
   const blob = new Blob([JSON.stringify(backup, null, 2)], {
