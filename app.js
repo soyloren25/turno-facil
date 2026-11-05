@@ -489,7 +489,24 @@ $("googleRestore").addEventListener("click", async () => {
     }
 
     const backup = await response.json();
+// Protección contra copias vacías
+const tieneDatos =
+  backup &&
+  backup.state &&
+  (
+    backup.state.shifts?.length > 0 ||
+    backup.state.tips?.length > 0 ||
+    backup.state.active !== null ||
+    backup.calendar?.length > 0 ||
+    backup.state.name !== "compañero" ||
+    Number(backup.state.rate) > 0
+  );
 
+if (!tieneDatos) {
+  throw new Error(
+    "La copia está vacía. No se han modificado tus datos actuales."
+  );
+}
     const validBackup =
       backup.app === "Turno Fácil" &&
       backup.version === 1 &&
