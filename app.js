@@ -33,6 +33,8 @@ $("tipsForm").addEventListener("submit",e=>{e.preventDefault();const amount=Numb
 $("profileForm").addEventListener("submit",e=>{e.preventDefault();state.name=$("nameInput").value.trim()||"compañero";state.rate=Math.max(0,Number($("rateInput").value)||0);save();alert("Tus datos se han guardado.")});
 $("settingsBtn").addEventListener("click",()=>$("settingsDialog").showModal());
 // MODO OSCURO
+  $("settingsDialog").close();
+});
 const themeToggle = $("themeToggle");
 
 if (localStorage.getItem("turnoFacil_theme") === "dark") {
