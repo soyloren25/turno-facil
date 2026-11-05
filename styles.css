@@ -123,3 +123,35 @@ body.dark-mode dialog {
 body.dark-mode .feature-panel h2 {
   color: var(--ink);
 }
+/* ESTILO PROFESIONAL AZUL */
+body.professional-theme {
+  --navy: #071b3a;
+  --blue: #0878d1;
+  --teal: #00c9d8;
+  --ink: #142b49;
+  --muted: #637b98;
+  --bg: #eaf2fb;
+  --line: #d5e3f2;
+  --white: #ffffff;
+}
+
+body.professional-theme .topbar {
+  background: linear-gradient(135deg, #071b3a, #075b9c);
+}
+
+body.professional-theme .panel,
+body.professional-theme .stat-card {
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(7, 27, 58, .10);
+  border: 1px solid #d5e3f2;
+}
+
+body.professional-theme button.primary {
+  background: linear-gradient(135deg, #0878d1, #00a9c7);
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(8, 120, 209, .20);
+}
+
+body.professional-theme .feature-panel {
+  border-top: 3px solid #00c9d8;
+}
