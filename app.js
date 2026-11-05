@@ -816,3 +816,23 @@ document.getElementById("downloadMonthlyPDF").addEventListener("click", () => {
   ventana.document.close();
   ventana.focus();
 });
+/* NAVEGACIÓN INFERIOR */
+document.querySelectorAll(".bottom-nav [data-target]").forEach(button => {
+  button.addEventListener("click", () => {
+    const target = button.dataset.target;
+
+    if (target === "inicio") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    document.getElementById(target)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  });
+});
+
+$("navSettings").addEventListener("click", () => {
+  $("settingsBtn").click();
+});
