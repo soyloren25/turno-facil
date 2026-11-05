@@ -57,6 +57,19 @@ themeToggle.addEventListener("click", () => {
   updateThemeButton();
   $("settingsDialog").close();
 });
+// SELECTOR DE ESTILO
+const styleSelect = $("styleSelect");
+
+if (localStorage.getItem("turnoFacil_style") === "professional") {
+  document.body.classList.add("professional-theme");
+  styleSelect.value = "professional";
+}
+
+styleSelect.addEventListener("change", () => {
+  const professional = styleSelect.value === "professional";
+  document.body.classList.toggle("professional-theme", professional);
+  localStorage.setItem("turnoFacil_style", professional ? "professional" : "classic");
+});
 setInterval(()=>{if(state.active)$("timer").textContent=duration(Date.now()-state.active.start)},1000);
 if("serviceWorker" in navigator && location.protocol!=="file:"){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
 $("todayLabel").textContent=new Date().toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}).toUpperCase();
