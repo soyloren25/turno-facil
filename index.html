@@ -15,7 +15,58 @@
     <div class="brand"><span class="brand-mark">TF</span><div><strong>Turno Fácil</strong><small>Tu trabajo, bajo control</small></div></div>
     <button id="settingsBtn" class="icon-btn" aria-label="Configuración">⚙</button>
   </header>
-  <main>
+  <main><section class="panel" id="salaryPanel">
+  <h2>💶 Calculadora de sueldo</h2>
+  <label>Sueldo mensual bruto (€)
+    <input id="salaryBase" type="number" min="0" placeholder="1500">
+  </label>
+  <label>Horas extras
+    <input id="salaryExtraHours" type="number" min="0" value="0">
+  </label>
+  <label>Precio hora extra (€)
+    <input id="salaryExtraRate" type="number" min="0" placeholder="12">
+  </label>
+  <button id="salaryCalculate" class="primary" type="button">Calcular sueldo</button>
+  <div id="salaryResult" class="result-box">Introduce tus datos.</div>
+</section>
+
+<section class="panel" id="calendarPanel">
+  <h2>📅 Calendario de turnos</h2>
+  <form id="calendarForm">
+    <label>Fecha
+      <input id="calendarDate" type="date" required>
+    </label>
+    <label>Turno
+      <select id="calendarType">
+        <option>Mañana</option>
+        <option>Tarde</option>
+        <option>Noche</option>
+        <option>Descanso</option>
+        <option>Vacaciones</option>
+      </select>
+    </label>
+    <label>Entrada
+      <input id="calendarStart" type="time" value="09:00">
+    </label>
+    <label>Salida
+      <input id="calendarEnd" type="time" value="17:00">
+    </label>
+    <button class="primary" type="submit">Guardar turno</button>
+  </form>
+  <div id="calendarList"></div>
+</section>
+
+<section class="panel" id="splitTipsPanel">
+  <h2>💰 Repartir propinas</h2>
+  <label>Total de propinas (€)
+    <input id="splitTipsTotal" type="number" min="0" step="0.01" placeholder="100">
+  </label>
+  <label>Número de trabajadores
+    <input id="splitTipsPeople" type="number" min="1" step="1" placeholder="4">
+  </label>
+  <button class="primary" id="splitTipsCalculate" type="button">Repartir propinas</button>
+  <div id="splitTipsResult"></div>
+</section>
     <section class="welcome">
       <p class="eyebrow" id="todayLabel">TU RESUMEN</p>
       <h1>Hola, <span id="userName">compañero</span> 👋</h1>
