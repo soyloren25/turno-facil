@@ -15,6 +15,34 @@
     <div class="brand"><span class="brand-mark">TF</span><div><strong>Turno Fácil</strong><small>Tu trabajo, bajo control</small></div></div>
     <button id="settingsBtn" class="icon-btn" aria-label="Configuración">⚙</button>
   </header>
+      <section class="panel" id="backupPanel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">TUS DATOS</p>
+          <h2>💾 Copia de seguridad</h2>
+        </div>
+      </div>
+
+      <p class="hint">
+        Guarda una copia de tus jornadas, perfil, propinas y calendario.
+        Si cambias de móvil, podrás recuperarlos.
+      </p>
+
+      <div class="backup-actions">
+        <button class="primary" id="backupExport" type="button">
+          Descargar copia de seguridad
+        </button>
+
+        <label class="backup-file">
+          Restaurar una copia guardada
+          <input id="backupImport" type="file" accept="application/json,.json">
+        </label>
+      </div>
+
+      <p class="hint" id="backupMessage" aria-live="polite">
+        La copia se guarda en un archivo de tu dispositivo.
+      </p>
+    </section>
   <main><section class="panel" id="salaryPanel">
   <h2>💶 Calculadora de sueldo</h2>
   <label>Sueldo mensual bruto (€)
