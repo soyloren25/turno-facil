@@ -11,67 +11,20 @@
   <title>Turno Fácil</title>
 </head>
 <body>
+
   <header class="topbar">
-    <div class="brand"><span class="brand-mark">TF</span><div><strong>Turno Fácil</strong><small>Tu trabajo, bajo control</small></div></div>
+    <div class="brand">
+      <span class="brand-mark">TF</span>
+      <div>
+        <strong>Turno Fácil</strong>
+        <small>Tu trabajo, bajo control</small>
+      </div>
+    </div>
     <button id="settingsBtn" class="icon-btn" aria-label="Configuración">⚙</button>
   </header>
-  <main><!-- COPIA DE SEGURIDAD -->
-<section class="panel" id="backupPanel">
-  ...
-</section>
-<!-- FIN COPIA DE SEGURIDAD -->
-</main><section class="panel" id="salaryPanel">
-  <h2>💶 Calculadora de sueldo</h2>
-  <label>Sueldo mensual bruto (€)
-    <input id="salaryBase" type="number" min="0" placeholder="1500">
-  </label>
-  <label>Horas extras
-    <input id="salaryExtraHours" type="number" min="0" value="0">
-  </label>
-  <label>Precio hora extra (€)
-    <input id="salaryExtraRate" type="number" min="0" placeholder="12">
-  </label>
-  <button id="salaryCalculate" class="primary" type="button">Calcular sueldo</button>
-  <div id="salaryResult" class="result-box">Introduce tus datos.</div>
-</section>
 
-<section class="panel" id="calendarPanel">
-  <h2>📅 Calendario de turnos</h2>
-  <form id="calendarForm">
-    <label>Fecha
-      <input id="calendarDate" type="date" required>
-    </label>
-    <label>Turno
-      <select id="calendarType">
-        <option>Mañana</option>
-        <option>Tarde</option>
-        <option>Noche</option>
-        <option>Descanso</option>
-        <option>Vacaciones</option>
-      </select>
-    </label>
-    <label>Entrada
-      <input id="calendarStart" type="time" value="09:00">
-    </label>
-    <label>Salida
-      <input id="calendarEnd" type="time" value="17:00">
-    </label>
-    <button class="primary" type="submit">Guardar turno</button>
-  </form>
-  <div id="calendarList"></div>
-</section>
+  <main>
 
-<section class="panel" id="splitTipsPanel">
-  <h2>💰 Repartir propinas</h2>
-  <label>Total de propinas (€)
-    <input id="splitTipsTotal" type="number" min="0" step="0.01" placeholder="100">
-  </label>
-  <label>Número de trabajadores
-    <input id="splitTipsPeople" type="number" min="1" step="1" placeholder="4">
-  </label>
-  <button class="primary" id="splitTipsCalculate" type="button">Repartir propinas</button>
-  <div id="splitTipsResult"></div>
-</section>
     <section class="welcome">
       <p class="eyebrow" id="todayLabel">TU RESUMEN</p>
       <h1>Hola, <span id="userName">compañero</span> 👋</h1>
@@ -79,13 +32,31 @@
     </section>
 
     <section class="stats">
-      <article class="stat-card"><span>Horas este mes</span><strong id="monthHours">0 h</strong><small>Jornadas registradas</small></article>
-      <article class="stat-card"><span>Sueldo estimado</span><strong id="monthPay">0,00 €</strong><small>Según tu tarifa por hora</small></article>
-      <article class="stat-card"><span>Propinas</span><strong id="monthTips">0,00 €</strong><small>Este mes</small></article>
+      <article class="stat-card">
+        <span>Horas este mes</span>
+        <strong id="monthHours">0 h</strong>
+        <small>Jornadas registradas</small>
+      </article>
+      <article class="stat-card">
+        <span>Sueldo estimado</span>
+        <strong id="monthPay">0,00 €</strong>
+        <small>Según tu tarifa por hora</small>
+      </article>
+      <article class="stat-card">
+        <span>Propinas</span>
+        <strong id="monthTips">0,00 €</strong>
+        <small>Este mes</small>
+      </article>
     </section>
 
     <section class="panel shift-panel">
-      <div class="section-heading"><div><p class="eyebrow">CONTROL HORARIO</p><h2>Tu jornada</h2></div><span class="live-dot" id="statusDot"></span></div>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CONTROL HORARIO</p>
+          <h2>Tu jornada</h2>
+        </div>
+        <span class="live-dot" id="statusDot"></span>
+      </div>
       <div class="timer" id="timer">00:00:00</div>
       <p class="muted center" id="shiftStatus">Todavía no has iniciado tu jornada.</p>
       <div class="actions">
@@ -96,7 +67,13 @@
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">AÑADIR REGISTRO</p><h2>Propinas de hoy</h2></div><span class="emoji">💶</span></div>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">AÑADIR REGISTRO</p>
+          <h2>Propinas de hoy</h2>
+        </div>
+        <span class="emoji">💶</span>
+      </div>
       <form id="tipsForm" class="inline-form">
         <label class="sr-only" for="tipsInput">Importe de propinas en euros</label>
         <input id="tipsInput" type="number" min="0" step="0.01" placeholder="Importe en €" required>
@@ -104,20 +81,125 @@
       </form>
     </section>
 
-    <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">TU ACTIVIDAD</p><h2>Últimas jornadas</h2></div></div>
-      <div id="history" class="history"><p class="empty">Todavía no hay jornadas guardadas.</p></div>
+    <section class="panel" id="salaryPanel">
+      <h2>💶 Calculadora de sueldo</h2>
+      <label>Sueldo mensual bruto (€)
+        <input id="salaryBase" type="number" min="0" placeholder="1500">
+      </label>
+      <label>Horas extras
+        <input id="salaryExtraHours" type="number" min="0" value="0">
+      </label>
+      <label>Precio hora extra (€)
+        <input id="salaryExtraRate" type="number" min="0" placeholder="12">
+      </label>
+      <button id="salaryCalculate" class="primary" type="button">Calcular sueldo</button>
+      <div id="salaryResult" class="result-box">Introduce tus datos.</div>
     </section>
+
+    <section class="panel" id="calendarPanel">
+      <h2>📅 Calendario de turnos</h2>
+      <form id="calendarForm">
+        <label>Fecha
+          <input id="calendarDate" type="date" required>
+        </label>
+        <label>Turno
+          <select id="calendarType">
+            <option>Mañana</option>
+            <option>Tarde</option>
+            <option>Noche</option>
+            <option>Descanso</option>
+            <option>Vacaciones</option>
+          </select>
+        </label>
+        <label>Entrada
+          <input id="calendarStart" type="time" value="09:00">
+        </label>
+        <label>Salida
+          <input id="calendarEnd" type="time" value="17:00">
+        </label>
+        <button class="primary" type="submit">Guardar turno</button>
+      </form>
+      <div id="calendarList"></div>
+    </section>
+
+    <section class="panel" id="splitTipsPanel">
+      <h2>💰 Repartir propinas</h2>
+      <label>Total de propinas (€)
+        <input id="splitTipsTotal" type="number" min="0" step="0.01" placeholder="100">
+      </label>
+      <label>Número de trabajadores
+        <input id="splitTipsPeople" type="number" min="1" step="1" placeholder="4">
+      </label>
+      <button class="primary" id="splitTipsCalculate" type="button">Repartir propinas</button>
+      <div id="splitTipsResult"></div>
+    </section>
+
     <section class="panel">
-      <div class="section-heading"><div><p class="eyebrow">CONFIGURA TU PERFIL</p><h2>Tus datos</h2></div></div>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">TU ACTIVIDAD</p>
+          <h2>Últimas jornadas</h2>
+        </div>
+      </div>
+      <div id="history" class="history">
+        <p class="empty">Todavía no hay jornadas guardadas.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CONFIGURA TU PERFIL</p>
+          <h2>Tus datos</h2>
+        </div>
+      </div>
       <form id="profileForm" class="profile-form">
-        <label>Tu nombre<input id="nameInput" maxlength="30" placeholder="Ej. Alex"></label>
-        <label>Pago bruto estimado por hora (€)<input id="rateInput" type="number" min="0" step="0.01" placeholder="Ej. 10"></label>
+        <label>Tu nombre
+          <input id="nameInput" maxlength="30" placeholder="Ej. Alex">
+        </label>
+        <label>Pago bruto estimado por hora (€)
+          <input id="rateInput" type="number" min="0" step="0.01" placeholder="Ej. 10">
+        </label>
         <button class="secondary" type="submit">Guardar mis datos</button>
       </form>
       <p class="hint">El sueldo es una estimación orientativa, no sustituye a tu nómina ni calcula impuestos, complementos o convenios.</p>
     </section>
+
+    <!-- COPIA DE SEGURIDAD -->
+    <section class="panel" id="backupPanel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">PROTEGE TUS DATOS</p>
+          <h2>💾 Copia de seguridad</h2>
+        </div>
+      </div>
+
+      <p class="muted">
+        Guarda una copia de tus jornadas, calendario, perfil y propinas.
+        Podrás recuperarla cuando la necesites.
+      </p>
+
+      <button id="backupExport" class="primary" type="button">
+        Descargar copia de seguridad
+      </button>
+
+      <label for="backupImport">
+        Restaurar una copia guardada
+        <input
+          id="backupImport"
+          type="file"
+          accept=".json,application/json"
+        >
+      </label>
+
+      <p id="backupMessage" class="hint" aria-live="polite">
+        Tus datos se guardan en este dispositivo.
+      </p>
+    </section>
+    <!-- FIN COPIA DE SEGURIDAD -->
+
   </main>
+
   <footer>Turno Fácil · Primera versión · Tus datos se guardan en este dispositivo.</footer>
 
   <dialog id="settingsDialog">
@@ -127,6 +209,7 @@
       <button class="primary" value="close">Entendido</button>
     </form>
   </dialog>
+
   <script src="app.js"></script>
 </body>
 </html>
