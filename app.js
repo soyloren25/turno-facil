@@ -660,3 +660,43 @@ async function uploadDriveBackup() {
     driveUploading = false;
   }
 }
+// COMPARTIR JORNADAS
+document.getElementById("shareShifts").addEventListener("click", async () => {
+  if (!state.shifts.length) {
+    alert("Todavía no tienes jornadas para compartir.");
+    return;
+  }
+
+  const jornadas = [...state.shifts].sort((a, b) => a.start - b.start);
+
+  let totalHoras = 0;
+
+  let mensaje = "📋 MIS JORNADAS - TURNO FÁCIL\n\n";
+
+  jornadas.forEach((s, i) => {
+    const horas = shiftHours(s);
+    totalHoras += horas;
+
+    mensaje +=
+      "📅 " + new Date(s.start).toLocaleDateString("es-ES") + "\n" +
+      "🕒 Entrada: " + new Date(s.start).toLocaleTimeString("es-ES", {hour:"2-digit", minute:"2-digit"}) + "\n" +
+      "🕒 Salida: " + new Date(s.end).toLocaleTimeString("es-ES", {hour:"2-digit", minute:"2-digit"}) + "\n" +
+      "⏱️ Horas: " + horas.toFixed(2).replace(".", ",") + "\n\n";
+  });
+
+  mensaje += "--------------------\n";
+  mensaje += "TOTAL: " + totalHoras.toFixed(2).replace(".", ",") + " horas\n";
+  mensaje += "\nEnviado desde Turno Fácil 📱";
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Mis jornadas - Turno Fácil",
+        text: mensaje
+      });
+    } catch (error) {}
+  } else {
+    await navigator.clipboard.writeText(mensaje);
+    alert("Resumen copiado. Ya puedes compartirlo.");
+  }
+});
