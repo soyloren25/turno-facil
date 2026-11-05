@@ -700,3 +700,81 @@ document.getElementById("shareShifts").addEventListener("click", async () => {
     alert("Resumen copiado. Ya puedes compartirlo.");
   }
 });
+// INFORME MENSUAL PDF
+document.getElementById("downloadMonthlyPDF").addEventListener("click", () => {
+  const now = new Date();
+  const month = now.getMonth();
+  const year = now.getFullYear();
+
+  const jornadas = state.shifts
+    .filter(s => {
+      const d = new Date(s.start);
+      return d.getMonth() === month && d.getFullYear() === year;
+    })
+    .sort((a, b) => a.start - b.start);
+
+  const totalHoras = jornadas.reduce((sum, s) => sum + shiftHours(s), 0);
+  const totalPropinas = state.tips
+    .filter(t => {
+      const d = new Date(t.date);
+      return d.getMonth() === month && d.getFullYear() === year;
+    })
+    .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
+  const filas = jornadas.map(s => `
+    <tr>
+      <td>${new Date(s.start).toLocaleDateString("es-ES")}</td>
+      <td>${new Date(s.start).toLocaleTimeString("es-ES", {hour:"2-digit",minute:"2-digit"})}</td>
+      <td>${new Date(s.end).toLocaleTimeString("es-ES", {hour:"2-digit",minute:"2-digit"})}</td>
+      <td>${shiftHours(s).toFixed(2).replace(".", ",")} h</td>
+    </tr>
+  `).join("");
+
+  const contenido = `
+    <!doctype html>
+    <html lang="es">
+    <head>
+      <meta charset="utf-8">
+      <title>Informe mensual - Turno Fácil</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 30px; color: #10213b; }
+        h1 { color: #10213b; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { border: 1px solid #ccc; padding: 9px; text-align: left; }
+        th { background: #eaf1f7; }
+        .resumen { margin-top: 25px; padding: 15px; background: #f1f6fa; }
+        @media print { button { display: none; } }
+      </style>
+    </head>
+    <body>
+      <h1>Turno Fácil</h1>
+      <h2>Informe mensual: ${now.toLocaleDateString("es-ES", {month:"long",year:"numeric"})}</h2>
+      <p><strong>Trabajador:</strong> ${state.name || "Sin nombre"}</p>
+      <table>
+        <thead>
+          <tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Horas</th></tr>
+        </thead>
+        <tbody>${filas || '<tr><td colspan="4">No hay jornadas este mes.</td></tr>'}</tbody>
+      </table>
+      <div class="resumen">
+        <p><strong>Total de jornadas:</strong> ${jornadas.length}</p>
+        <p><strong>Total de horas:</strong> ${totalHoras.toFixed(2).replace(".", ",")} h</p>
+        <p><strong>Propinas:</strong> ${money(totalPropinas)}</p>
+        <p><strong>Sueldo estimado:</strong> ${money(totalHoras * Number(state.rate || 0))}</p>
+      </div>
+      <p>Documento generado con Turno Fácil. Resumen orientativo.</p>
+      <button onclick="window.print()">Guardar como PDF</button>
+    </body>
+    </html>
+  `;
+
+  const ventana = window.open("", "_blank");
+  if (!ventana) {
+    alert("Permite las ventanas emergentes para generar el informe.");
+    return;
+  }
+
+  ventana.document.write(contenido);
+  ventana.document.close();
+  ventana.focus();
+});
