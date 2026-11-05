@@ -36,3 +36,142 @@ setInterval(()=>{if(state.active)$("timer").textContent=duration(Date.now()-stat
 if("serviceWorker" in navigator && location.protocol!=="file:"){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
 $("todayLabel").textContent=new Date().toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}).toUpperCase();
 render();
+// ======================================
+// TURNO FACIL 2.0 - NUEVAS FUNCIONES
+// ======================================
+
+// 1. CALCULADORA DE SUELDO
+document.getElementById("salaryCalculate").addEventListener("click", () => {
+  const base = Number(document.getElementById("salaryBase").value);
+  const hours = Number(document.getElementById("salaryExtraHours").value);
+  const rate = Number(document.getElementById("salaryExtraRate").value);
+
+  if (base < 0 || hours < 0 || rate < 0 ||
+      !Number.isFinite(base + hours + rate)) {
+    alert("Introduce cantidades válidas.");
+    return;
+  }
+
+  const extras = hours * rate;
+  const total = base + extras;
+
+  document.getElementById("salaryResult").textContent =
+    "Sueldo base: " + money(base) +
+    " | Horas extras: " + money(extras) +
+    " | Total bruto estimado: " + money(total);
+});
+
+// 2. CALENDARIO DE TURNOS
+const calendarKey = "turnoFacil_calendar";
+let calendarData = JSON.parse(localStorage.getItem(calendarKey) || "[]");
+
+function renderCalendar() {
+  const list = document.getElementById("calendarList");
+  list.replaceChildren();
+
+  calendarData.sort((a, b) => a.date.localeCompare(b.date));
+
+  if (!calendarData.length) {
+    list.textContent = "Todavía no hay turnos guardados.";
+    return;
+  }
+
+  calendarData.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "history-row";
+
+    const info = document.createElement("span");
+    info.textContent = item.date + " · " + item.type +
+      (item.type === "Descanso" || item.type === "Vacaciones"
+        ? "" : " · " + item.start + "–" + item.end);
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "Eliminar";
+    remove.className = "secondary";
+
+    remove.addEventListener("click", () => {
+      calendarData.splice(index, 1);
+      localStorage.setItem(calendarKey, JSON.stringify(calendarData));
+      renderCalendar();
+    });
+
+    row.append(info, remove);
+    list.append(row);
+  });
+}
+
+document.getElementById("calendarDate").value =
+  new Date().toLocaleDateString("sv-SE");
+
+document.getElementById("calendarForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const item = {
+    date: document.getElementById("calendarDate").value,
+    type: document.getElementById("calendarType").value,
+    start: document.getElementById("calendarStart").value,
+    end: document.getElementById("calendarEnd").value
+  };
+
+  if (!item.date) return;
+
+  calendarData = calendarData.filter(x => x.date !== item.date);
+  calendarData.push(item);
+
+  localStorage.setItem(calendarKey, JSON.stringify(calendarData));
+  renderCalendar();
+  alert("¡Turno guardado!");
+});
+
+// 3. REPARTO DE PROPINAS
+document.getElementById("splitTipsCalculate").addEventListener("click", () => {
+  const total = Number(document.getElementById("splitTipsTotal").value);
+  const people = Number(document.getElementById("splitTipsPeople").value);
+  const result = document.getElementById("splitTipsResult");
+
+  if (!Number.isFinite(total) || total < 0 ||
+      !Number.isInteger(people) || people < 1) {
+    alert("Introduce un importe y un número de trabajadores válidos.");
+    return;
+  }
+
+  const cents = Math.round(total * 100);
+  const base = Math.floor(cents / people);
+  const remainder = cents % people;
+
+  result.replaceChildren();
+
+  for (let i = 0; i < people; i++) {
+    const line = document.createElement("p");
+    const amount = (base + (i < remainder ? 1 : 0)) / 100;
+    line.textContent = "Trabajador " + (i + 1) + ": " + money(amount);
+    result.append(line);
+  }
+
+  const share = document.createElement("button");
+  share.type = "button";
+  share.className = "secondary";
+  share.textContent = "Compartir reparto";
+
+  share.addEventListener("click", async () => {
+    const text = Array.from(result.querySelectorAll("p"))
+      .map(p => p.textContent).join("\n");
+
+    if (navigator.share) {
+      await navigator.share({ title: "Turno Fácil - Propinas", text });
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      alert("Reparto copiado.");
+    } else {
+      alert(text);
+    }
+  });
+
+  result.append(share);
+});
+
+// Mostrar turnos guardados
+renderCalendar();
+
+console.log("Turno Fácil 2.0: nuevas funciones cargadas.");
