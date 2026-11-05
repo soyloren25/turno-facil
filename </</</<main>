@@ -15,86 +15,61 @@
     <div class="brand"><span class="brand-mark">TF</span><div><strong>Turno Fácil</strong><small>Tu trabajo, bajo control</small></div></div>
     <button id="settingsBtn" class="icon-btn" aria-label="Configuración">⚙</button>
   </header>
-      <section class="panel" id="backupPanel">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">TUS DATOS</p>
-          <h2>💾 Copia de seguridad</h2>
-        </div>
-      </div>
 
-      <p class="hint">
-        Guarda una copia de tus jornadas, perfil, propinas y calendario.
-        Si cambias de móvil, podrás recuperarlos.
-      </p>
-
-      <div class="backup-actions">
-        <button class="primary" id="backupExport" type="button">
-          Descargar copia de seguridad
-        </button>
-
-        <label class="backup-file">
-          Restaurar una copia guardada
-          <input id="backupImport" type="file" accept="application/json,.json">
-        </label>
-      </div>
-
-      <p class="hint" id="backupMessage" aria-live="polite">
-        La copia se guarda en un archivo de tu dispositivo.
-      </p>
+  <main>
+    <section class="panel" id="salaryPanel">
+      <h2>💶 Calculadora de sueldo</h2>
+      <label>Sueldo mensual bruto (€)
+        <input id="salaryBase" type="number" min="0" placeholder="1500">
+      </label>
+      <label>Horas extras
+        <input id="salaryExtraHours" type="number" min="0" value="0">
+      </label>
+      <label>Precio hora extra (€)
+        <input id="salaryExtraRate" type="number" min="0" placeholder="12">
+      </label>
+      <button id="salaryCalculate" class="primary" type="button">Calcular sueldo</button>
+      <div id="salaryResult" class="result-box">Introduce tus datos.</div>
     </section>
-  <main><section class="panel" id="salaryPanel">
-  <h2>💶 Calculadora de sueldo</h2>
-  <label>Sueldo mensual bruto (€)
-    <input id="salaryBase" type="number" min="0" placeholder="1500">
-  </label>
-  <label>Horas extras
-    <input id="salaryExtraHours" type="number" min="0" value="0">
-  </label>
-  <label>Precio hora extra (€)
-    <input id="salaryExtraRate" type="number" min="0" placeholder="12">
-  </label>
-  <button id="salaryCalculate" class="primary" type="button">Calcular sueldo</button>
-  <div id="salaryResult" class="result-box">Introduce tus datos.</div>
-</section>
 
-<section class="panel" id="calendarPanel">
-  <h2>📅 Calendario de turnos</h2>
-  <form id="calendarForm">
-    <label>Fecha
-      <input id="calendarDate" type="date" required>
-    </label>
-    <label>Turno
-      <select id="calendarType">
-        <option>Mañana</option>
-        <option>Tarde</option>
-        <option>Noche</option>
-        <option>Descanso</option>
-        <option>Vacaciones</option>
-      </select>
-    </label>
-    <label>Entrada
-      <input id="calendarStart" type="time" value="09:00">
-    </label>
-    <label>Salida
-      <input id="calendarEnd" type="time" value="17:00">
-    </label>
-    <button class="primary" type="submit">Guardar turno</button>
-  </form>
-  <div id="calendarList"></div>
-</section>
+    <section class="panel" id="calendarPanel">
+      <h2>📅 Calendario de turnos</h2>
+      <form id="calendarForm">
+        <label>Fecha
+          <input id="calendarDate" type="date" required>
+        </label>
+        <label>Turno
+          <select id="calendarType">
+            <option>Mañana</option>
+            <option>Tarde</option>
+            <option>Noche</option>
+            <option>Descanso</option>
+            <option>Vacaciones</option>
+          </select>
+        </label>
+        <label>Entrada
+          <input id="calendarStart" type="time" value="09:00">
+        </label>
+        <label>Salida
+          <input id="calendarEnd" type="time" value="17:00">
+        </label>
+        <button class="primary" type="submit">Guardar turno</button>
+      </form>
+      <div id="calendarList"></div>
+    </section>
 
-<section class="panel" id="splitTipsPanel">
-  <h2>💰 Repartir propinas</h2>
-  <label>Total de propinas (€)
-    <input id="splitTipsTotal" type="number" min="0" step="0.01" placeholder="100">
-  </label>
-  <label>Número de trabajadores
-    <input id="splitTipsPeople" type="number" min="1" step="1" placeholder="4">
-  </label>
-  <button class="primary" id="splitTipsCalculate" type="button">Repartir propinas</button>
-  <div id="splitTipsResult"></div>
-</section>
+    <section class="panel" id="splitTipsPanel">
+      <h2>💰 Repartir propinas</h2>
+      <label>Total de propinas (€)
+        <input id="splitTipsTotal" type="number" min="0" step="0.01" placeholder="100">
+      </label>
+      <label>Número de trabajadores
+        <input id="splitTipsPeople" type="number" min="1" step="1" placeholder="4">
+      </label>
+      <button class="primary" id="splitTipsCalculate" type="button">Repartir propinas</button>
+      <div id="splitTipsResult"></div>
+    </section>
+
     <section class="welcome">
       <p class="eyebrow" id="todayLabel">TU RESUMEN</p>
       <h1>Hola, <span id="userName">compañero</span> 👋</h1>
@@ -131,6 +106,7 @@
       <div class="section-heading"><div><p class="eyebrow">TU ACTIVIDAD</p><h2>Últimas jornadas</h2></div></div>
       <div id="history" class="history"><p class="empty">Todavía no hay jornadas guardadas.</p></div>
     </section>
+
     <section class="panel">
       <div class="section-heading"><div><p class="eyebrow">CONFIGURA TU PERFIL</p><h2>Tus datos</h2></div></div>
       <form id="profileForm" class="profile-form">
@@ -140,7 +116,37 @@
       </form>
       <p class="hint">El sueldo es una estimación orientativa, no sustituye a tu nómina ni calcula impuestos, complementos o convenios.</p>
     </section>
+
+    <section class="panel" id="backupPanel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">TUS DATOS</p>
+          <h2>💾 Copia de seguridad</h2>
+        </div>
+      </div>
+
+      <p class="hint">
+        Guarda una copia de tus jornadas, perfil, propinas y calendario.
+        Si cambias de móvil, podrás recuperarlos.
+      </p>
+
+      <div class="backup-actions">
+        <button class="primary" id="backupExport" type="button">
+          Descargar copia de seguridad
+        </button>
+
+        <label class="backup-file">
+          Restaurar una copia guardada
+          <input id="backupImport" type="file" accept="application/json,.json">
+        </label>
+      </div>
+
+      <p class="hint" id="backupMessage" aria-live="polite">
+        La copia se guarda en un archivo de tu dispositivo.
+      </p>
+    </section>
   </main>
+
   <footer>Turno Fácil · Primera versión · Tus datos se guardan en este dispositivo.</footer>
 
   <dialog id="settingsDialog">
