@@ -33,7 +33,28 @@ $("tipsForm").addEventListener("submit",e=>{e.preventDefault();const amount=Numb
 $("profileForm").addEventListener("submit",e=>{e.preventDefault();state.name=$("nameInput").value.trim()||"compañero";state.rate=Math.max(0,Number($("rateInput").value)||0);save();alert("Tus datos se han guardado.")});
 $("settingsBtn").addEventListener("click",()=>$("settingsDialog").showModal());
 // MODO OSCURO
-  // SELECTOR DE ESTILO
+const themeToggle = $("themeToggle");
+
+if (localStorage.getItem("turnoFacil_theme") === "dark") {
+  document.body.classList.add("dark-mode");
+}
+
+function updateThemeButton() {
+  themeToggle.textContent = document.body.classList.contains("dark-mode")
+    ? "☀️ Activar modo claro"
+    : "🌙 Activar modo oscuro";
+}
+
+updateThemeButton();
+
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const dark = document.body.classList.contains("dark-mode");
+  localStorage.setItem("turnoFacil_theme", dark ? "dark" : "light");
+  updateThemeButton();
+  $("settingsDialog").close();
+});
+// SELECTOR DE ESTILO
 const styleSelect = $("styleSelect");
 
 if (localStorage.getItem("turnoFacil_style") === "professional") {
@@ -43,21 +64,16 @@ if (localStorage.getItem("turnoFacil_style") === "professional") {
 
 styleSelect.addEventListener("change", () => {
   const professional = styleSelect.value === "professional";
-
   document.body.classList.toggle("professional-theme", professional);
-
-  localStorage.setItem(
-    "turnoFacil_style",
-    professional ? "professional" : "classic"
-  );
+  localStorage.setItem("turnoFacil_style", professional ? "professional" : "classic");
 });
-});
-const themeToggle = $("themeToggle");
 
-if (localStorage.getItem("turnoFacil_theme") === "dark") {
-  document.body.classList.add("dark-mode");
-}
-
+// ACTUALIZAR TEMPORIZADOR
+setInterval(() => {
+  if (state.active) {
+    $("timer").textContent = duration(Date.now() - state.active.start);
+  }
+}, 1000);
 function updateThemeButton() {
   themeToggle.textContent = document.body.classList.contains("dark-mode")
     ? "☀️ Activar modo claro"
