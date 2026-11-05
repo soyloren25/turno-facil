@@ -175,3 +175,69 @@ document.getElementById("splitTipsCalculate").addEventListener("click", () => {
 renderCalendar();
 
 console.log("Turno Fácil 2.0: nuevas funciones cargadas.");
+// 4. COPIA DE SEGURIDAD Y RESTAURACIÓN
+document.getElementById("backupExport").addEventListener("click", () => {
+  const backup = {
+    app: "Turno Fácil",
+    version: 1,
+    createdAt: new Date().toISOString(),
+    state: JSON.parse(localStorage.getItem(KEY) || "{}"),
+    calendar: JSON.parse(localStorage.getItem(calendarKey) || "[]")
+  };
+
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "turno-facil-copia-" + dateKey(new Date()) + ".json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+
+  document.getElementById("backupMessage").textContent =
+    "Copia descargada. Guárdala en un lugar seguro.";
+});
+
+document.getElementById("backupImport").addEventListener("change", async event => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  try {
+    const backup = JSON.parse(await file.text());
+
+    const validState = backup &&
+      backup.app === "Turno Fácil" &&
+      backup.version === 1 &&
+      backup.state &&
+      Array.isArray(backup.state.shifts) &&
+      Array.isArray(backup.state.tips) &&
+      Array.isArray(backup.calendar);
+
+    if (!validState) {
+      throw new Error("El archivo no parece una copia válida de Turno Fácil.");
+    }
+
+    if (!confirm("Restaurar esta copia sustituirá los datos actuales de Turno Fácil en este navegador. ¿Continuar?")) {
+      event.target.value = "";
+      return;
+    }
+
+    localStorage.setItem(KEY, JSON.stringify({
+      ...emptyState,
+      ...backup.state
+    }));
+
+    localStorage.setItem(calendarKey, JSON.stringify(backup.calendar));
+
+    alert("Copia restaurada. Turno Fácil se va a actualizar.");
+    location.reload();
+
+  } catch (error) {
+    alert(error.message || "No se pudo leer la copia de seguridad.");
+    event.target.value = "";
+  }
+});
