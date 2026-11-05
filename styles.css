@@ -186,3 +186,59 @@ body.professional-theme .primary {
   color: white !important;
   border-radius: 14px !important;
 }
+/* DETALLES MODERNOS PROFESIONAL */
+body.professional-theme .brand-mark {
+  background: linear-gradient(135deg, #0878d1, #00c9d8);
+  color: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 100, 200, .25);
+}
+
+body.professional-theme .eyebrow {
+  color: #0878d1;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+body.professional-theme .emoji {
+  background: #e4f3ff;
+  padding: 10px;
+  border-radius: 14px;
+}
+
+body.professional-theme .live-dot {
+  box-shadow: 0 0 12px #00c9d8;
+}
+
+body.professional-theme h2 {
+  color: #102b4c;
+  letter-spacing: -.4px;
+}
+
+body.professional-theme input,
+body.professional-theme select,
+body.professional-theme textarea {
+  border: 1px solid #c6d9ee;
+  border-radius: 12px;
+  transition: .2s ease;
+}
+
+body.professional-theme input:focus,
+body.professional-theme select:focus,
+body.professional-theme textarea:focus {
+  border-color: #0878d1;
+  box-shadow: 0 0 0 3px rgba(8, 120, 209, .12);
+  outline: none;
+}
+
+body.professional-theme button {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+body.professional-theme button:active {
+  transform: scale(.97);
+}
+
+body.professional-theme .hint {
+  color: #637b98;
+}
