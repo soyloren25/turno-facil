@@ -223,20 +223,30 @@
 
   <footer>Turno Fácil · Primera versión · Tus datos se guardan en este dispositivo.</footer>
 
-  <dialog id="settingsDialog">
-    <form method="dialog" class="dialog-content">
-      <h2>Configuración</h2>
-      <p>Esta primera versión guarda tus datos localmente en este navegador. Si borras los datos del navegador, podrías perderlos.</p>
-      <button id="themeToggle" class="secondary" type="button">
-  🌙 Activar modo oscuro
-</button>
-      <button id="themeToggle" class="secondary" type="button">
-  🌙 Activar modo oscuro
-</button>
-      <button class="primary" value="close">Entendido</button>
-    </form>
-  </dialog>
+ <dialog id="settingsDialog">
+  <form method="dialog" class="dialog-content">
+    <h2>Configuración</h2>
+
+    <p>
+      Esta primera versión guarda tus datos localmente en este navegador.
+      Si borras los datos del navegador, podrías perderlos.
+    </p>
+
+    <label for="styleSelect">🎨 Estilo de la aplicación</label>
+    <select id="styleSelect">
+      <option value="classic">Clásico</option>
+      <option value="professional">Profesional azul</option>
+    </select>
+
+    <button id="themeToggle" class="secondary" type="button">
+      🌙 Activar modo oscuro
+    </button>
+
+    <button class="primary" value="close">Entendido</button>
+  </form>
+</dialog>
+
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
