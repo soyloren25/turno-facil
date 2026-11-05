@@ -520,3 +520,126 @@ $("googleRestore").addEventListener("click", async () => {
     alert(error.message || "Error al restaurar la copia.");
   }
 });
+// ===== MEJORAS DE SEGURIDAD DE GOOGLE DRIVE =====
+
+let driveUploading = false;
+
+const lastBackupDate = localStorage.getItem("turnoFacil_drive_last_backup");
+
+if (lastBackupDate && $("googleLastBackup")) {
+  $("googleLastBackup").textContent =
+    "Última copia: " + new Date(lastBackupDate).toLocaleString("es-ES");
+}
+
+async function uploadDriveBackup() {
+  if (!driveToken || driveUploading) return;
+
+  const backup = createDriveBackup();
+
+  // Comprobar si hay datos reales que proteger
+  const hasData =
+    backup.state.shifts.length > 0 ||
+    backup.state.tips.length > 0 ||
+    backup.state.active !== null ||
+    backup.calendar.length > 0 ||
+    backup.state.name !== "compañero" ||
+    Number(backup.state.rate) > 0;
+
+  if (!hasData) {
+    $("googleStatus").textContent =
+      "No se ha guardado: no hay datos para proteger.";
+    return;
+  }
+
+  // Evitar subir copias si nada ha cambiado
+  const snapshot = JSON.stringify({
+    state: backup.state,
+    calendar: backup.calendar
+  });
+
+  if (snapshot === driveLastSnapshot) return;
+
+  driveUploading = true;
+
+  try {
+    backup.createdAt = new Date().toISOString();
+
+    let response;
+
+    if (driveFileId) {
+      response = await fetch(
+        "https://www.googleapis.com/upload/drive/v3/files/" +
+        driveFileId + "?uploadType=media",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: "Bearer " + driveToken,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(backup)
+        }
+      );
+    } else {
+      const boundary = "turnofacil_" + Date.now();
+
+      const body =
+        "--" + boundary + "\r\n" +
+        "Content-Type: application/json; charset=UTF-8\r\n\r\n" +
+        JSON.stringify({
+          name: DRIVE_FILENAME,
+          mimeType: "application/json"
+        }) +
+        "\r\n--" + boundary + "\r\n" +
+        "Content-Type: application/json\r\n\r\n" +
+        JSON.stringify(backup) +
+        "\r\n--" + boundary + "--";
+
+      response = await fetch(
+        "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + driveToken,
+            "Content-Type": "multipart/related; boundary=" + boundary
+          },
+          body
+        }
+      );
+    }
+
+    if (response.status === 401) {
+      driveToken = null;
+      if (driveSyncTimer) clearInterval(driveSyncTimer);
+
+      $("googleStatus").textContent =
+        "El permiso de Google ha caducado. Vuelve a conectar Drive.";
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error("Error de Google Drive: " + response.status);
+    }
+
+    const result = await response.json();
+
+    if (result.id) driveFileId = result.id;
+
+    driveLastSnapshot = snapshot;
+
+    const now = new Date().toISOString();
+    localStorage.setItem("turnoFacil_drive_last_backup", now);
+
+    $("googleStatus").textContent =
+      "✅ Copia guardada automáticamente en Google Drive.";
+
+    $("googleLastBackup").textContent =
+      "Última copia: " + new Date(now).toLocaleString("es-ES");
+
+  } catch (error) {
+    console.error(error);
+    $("googleStatus").textContent =
+      "Error al guardar. Tus datos locales siguen conservados.";
+  } finally {
+    driveUploading = false;
+  }
+}
