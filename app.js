@@ -243,3 +243,152 @@ document.getElementById("backupImport").addEventListener("change", async event =
     event.target.value = "";
   }
 });
+
+// ===== COPIA AUTOMÁTICA EN GOOGLE DRIVE =====
+
+const GOOGLE_CLIENT_ID = "918875459904-9h2kdjiqu8g527266vo3o8h684utsqis.apps.googleusercontent.com";
+const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+const DRIVE_FILENAME = "turno-facil-auto-backup.json";
+
+let driveToken = null;
+let driveFileId = null;
+let driveLastSnapshot = "";
+let driveSyncTimer = null;
+
+function createDriveBackup() {
+  let savedState = {};
+  let savedCalendar = [];
+
+  try {
+    savedState = {
+      ...emptyState,
+      ...JSON.parse(localStorage.getItem(KEY) || "{}")
+    };
+
+    const calendar = JSON.parse(
+      localStorage.getItem(calendarKey) || "[]"
+    );
+
+    savedCalendar = Array.isArray(calendar) ? calendar : [];
+  } catch (error) {
+    console.error("Error preparando la copia:", error);
+  }
+
+  return {
+    app: "Turno Fácil",
+    version: 1,
+    createdAt: new Date().toISOString(),
+    state: savedState,
+    calendar: savedCalendar
+  };
+}
+
+async function uploadDriveBackup() {
+  if (!driveToken) return;
+
+  try {
+    const backup = createDriveBackup();
+    const snapshot = JSON.stringify(backup);
+
+    if (snapshot === driveLastSnapshot) return;
+
+    let response;
+
+    if (driveFileId) {
+      response = await fetch(
+        "https://www.googleapis.com/upload/drive/v3/files/" +
+        driveFileId +
+        "?uploadType=media",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: "Bearer " + driveToken,
+            "Content-Type": "application/json"
+          },
+          body: snapshot
+        }
+      );
+    } else {
+      const boundary = "turnofacil_" + Date.now();
+
+      const body =
+        "--" + boundary + "\r\n" +
+        "Content-Type: application/json; charset=UTF-8\r\n\r\n" +
+        JSON.stringify({
+          name: DRIVE_FILENAME,
+          mimeType: "application/json"
+        }) +
+        "\r\n--" + boundary + "\r\n" +
+        "Content-Type: application/json\r\n\r\n" +
+        snapshot +
+        "\r\n--" + boundary + "--";
+
+      response = await fetch(
+        "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + driveToken,
+            "Content-Type": "multipart/related; boundary=" + boundary
+          },
+          body
+        }
+      );
+    }
+
+    if (!response.ok) {
+      throw new Error("Google Drive respondió con error " + response.status);
+    }
+
+    const result = await response.json();
+
+    if (result.id) driveFileId = result.id;
+
+    driveLastSnapshot = snapshot;
+
+    $("googleStatus").textContent =
+      "✅ Copia guardada automáticamente en Google Drive.";
+  } catch (error) {
+    console.error(error);
+    $("googleStatus").textContent =
+      "No se pudo guardar. Comprueba la conexión y vuelve a conectar Google Drive.";
+  }
+}
+
+function startDriveSync() {
+  if (driveSyncTimer) clearInterval(driveSyncTimer);
+
+  driveLastSnapshot = "";
+  uploadDriveBackup();
+
+  driveSyncTimer = setInterval(() => {
+    uploadDriveBackup();
+  }, 5000);
+}
+
+$("googleConnect").addEventListener("click", () => {
+  if (!window.google?.accounts?.oauth2) {
+    $("googleStatus").textContent =
+      "Google todavía está cargando. Espera unos segundos y prueba otra vez.";
+    return;
+  }
+
+  const tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: DRIVE_SCOPE,
+    callback: (response) => {
+      if (response.error) {
+        $("googleStatus").textContent =
+          "No se pudo conectar con Google Drive.";
+        return;
+      }
+
+      driveToken = response.access_token;
+      $("googleStatus").textContent =
+        "Conectado. Preparando la copia de seguridad...";
+      startDriveSync();
+    }
+  });
+
+  tokenClient.requestAccessToken();
+});
