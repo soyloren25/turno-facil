@@ -80,3 +80,46 @@
 [hidden] {
   display: none !important;
 }
+/* MODO OSCURO */
+body.dark-mode {
+  --navy: #0b1424;
+  --blue: #5b8fe5;
+  --teal: #24b7a4;
+  --ink: #edf2fa;
+  --muted: #aab6c8;
+  --bg: #101827;
+  --line: #29364a;
+  --white: #192538;
+}
+
+body.dark-mode .topbar {
+  background: #080f1c;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #202e43;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+body.dark-mode .secondary {
+  background: #2a3a52;
+  color: var(--ink);
+}
+
+body.dark-mode .result-box {
+  background: #1d3a38;
+  border-color: #315c55;
+  color: var(--ink);
+}
+
+body.dark-mode dialog {
+  background: #192538;
+  color: var(--ink);
+}
+
+body.dark-mode .feature-panel h2 {
+  color: var(--ink);
+}
