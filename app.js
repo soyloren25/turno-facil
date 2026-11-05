@@ -33,7 +33,24 @@ $("tipsForm").addEventListener("submit",e=>{e.preventDefault();const amount=Numb
 $("profileForm").addEventListener("submit",e=>{e.preventDefault();state.name=$("nameInput").value.trim()||"compañero";state.rate=Math.max(0,Number($("rateInput").value)||0);save();alert("Tus datos se han guardado.")});
 $("settingsBtn").addEventListener("click",()=>$("settingsDialog").showModal());
 // MODO OSCURO
-  $("settingsDialog").close();
+  // SELECTOR DE ESTILO
+const styleSelect = $("styleSelect");
+
+if (localStorage.getItem("turnoFacil_style") === "professional") {
+  document.body.classList.add("professional-theme");
+  styleSelect.value = "professional";
+}
+
+styleSelect.addEventListener("change", () => {
+  const professional = styleSelect.value === "professional";
+
+  document.body.classList.toggle("professional-theme", professional);
+
+  localStorage.setItem(
+    "turnoFacil_style",
+    professional ? "professional" : "classic"
+  );
+});
 });
 const themeToggle = $("themeToggle");
 
