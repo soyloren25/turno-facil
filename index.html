@@ -120,6 +120,23 @@
         <button class="primary" type="submit">Guardar turno</button>
       </form>
       <div id="calendarList"></div>
+      <div class="repeat-week-box">
+  <h3>🔁 Repetir semana</h3>
+  <p>Elige una fecha de la semana que quieres copiar. Se repetirán sus turnos de lunes a domingo.</p>
+
+  <label for="repeatWeeks">Repetir durante</label>
+  <select id="repeatWeeks">
+    <option value="1">1 semana</option>
+    <option value="2">2 semanas</option>
+    <option value="4">4 semanas</option>
+  </select>
+
+  <button id="repeatWeekBtn" class="secondary" type="button">
+    Repetir semana
+  </button>
+
+  <p id="repeatWeekMessage" aria-live="polite"></p>
+</div>
     </section>
 
     <section class="panel" id="splitTipsPanel">
