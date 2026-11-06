@@ -836,3 +836,81 @@ document.querySelectorAll(".bottom-nav [data-target]").forEach(button => {
 $("navSettings").addEventListener("click", () => {
   $("settingsBtn").click();
 });
+document.getElementById("repeatWeekBtn").addEventListener("click", () => {
+  const message = document.getElementById("repeatWeekMessage");
+  const selectedDate = document.getElementById("calendarDate").value;
+  const weeks = Number(document.getElementById("repeatWeeks").value);
+
+  if (!selectedDate) {
+    message.textContent = "Primero selecciona una fecha.";
+    return;
+  }
+
+  function localDate(value) {
+    const [year, month, day] = value.split("-").map(Number);
+    return new Date(year, month - 1, day, 12);
+  }
+
+  function dateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  const monday = localDate(selectedDate);
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+
+  const sunday = new Date(monday);
+  sunday.setDate(sunday.getDate() + 7);
+
+  const source = calendarData.filter(item => {
+    const date = localDate(item.date);
+    return date >= monday && date < sunday;
+  });
+
+  if (!source.length) {
+    message.textContent = "No hay turnos guardados en esa semana.";
+    return;
+  }
+
+  const occupied = new Set(calendarData.map(item => item.date));
+  const additions = [];
+  let skipped = 0;
+
+  for (let week = 1; week <= weeks; week++) {
+    source.forEach(item => {
+      const target = localDate(item.date);
+      target.setDate(target.getDate() + week * 7);
+      const key = dateKey(target);
+
+      if (occupied.has(key)) {
+        skipped++;
+        return;
+      }
+
+      additions.push({ ...item, date: key });
+      occupied.add(key);
+    });
+  }
+
+  if (!additions.length) {
+    message.textContent = "No hay fechas libres para copiar los turnos.";
+    return;
+  }
+
+  const confirmation = confirm(
+    "Se añadirán " + additions.length +
+    " turnos. Los días que ya tengan turnos no se modificarán. ¿Continuar?"
+  );
+
+  if (!confirmation) return;
+
+  calendarData.push(...additions);
+  localStorage.setItem(calendarKey, JSON.stringify(calendarData));
+  renderCalendar();
+
+  message.textContent =
+    "¡Listo! Se han añadido " + additions.length +
+    " turnos. Se han omitido " + skipped + " días ocupados.";
+});
